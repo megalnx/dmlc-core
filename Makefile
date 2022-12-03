@@ -53,7 +53,8 @@ endif
 
 
 ALIB=libdmlc.a
-all: $(ALIB) test
+SOLIB=libdmlc.so
+all: $(ALIB) $(SOLIB) test
 
 include test/dmlc_test.mk
 include example/dmlc_example.mk
@@ -79,6 +80,7 @@ recordio.o: src/recordio.cc
 config.o: src/config.cc
 
 libdmlc.a: $(OBJ)
+libdmlc.so: $(OBJ)
 
 
 $(BIN) :
@@ -90,6 +92,9 @@ $(OBJ) :
 $(ALIB):
 	$(AR) cr $@ $+
 
+$(SOLIB):
+  $(CXX) -shared -o $@ $+
+
 lint:
 	scripts/lint.py dmlc ${LINT_LANG} include src scripts $(NOLINT_FILES)
 
@@ -100,4 +105,4 @@ doxygen:
 	doxygen doc/Doxyfile
 
 clean:
-	$(RM) $(OBJ) $(BIN) $(ALIB) $(ALL_TEST) $(ALL_TEST_OBJ) *~ src/*~ src/*/*~ include/dmlc/*~ test/*~
+	$(RM) $(OBJ) $(BIN) $(ALIB) $(SOLIB) $(ALL_TEST) $(ALL_TEST_OBJ) *~ src/*~ src/*/*~ include/dmlc/*~ test/*~
